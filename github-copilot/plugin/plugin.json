@@ -1,0 +1,19 @@
+{
+  "name": "harness",
+  "description": "Reusable orchestrator-worker-validator harness for GitHub Copilot agents.",
+  "version": "1.0.0",
+  "keywords": ["agents", "orchestration", "validation"],
+  "author": {
+    "name": "Vignesh Vadama"
+  },
+  "repository": "https://github.com/VigneshVadama/harness",
+  "license": "MIT",
+  "agents": [
+    "./github-copilot/agents/orchestrator.agent.md",
+    "./github-copilot/agents/worker.agent.md",
+    "./github-copilot/agents/validator.agent.md"
+  ],
+  "skills": [
+    "./skills/orchestrator-worker-validator/"
+  ]
+}

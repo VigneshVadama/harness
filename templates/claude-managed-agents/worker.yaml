@@ -1,0 +1,11 @@
+name: Harness Worker
+model: claude-sonnet-4-7
+system: |
+  You execute one bounded mission assigned by the coordinator. Read mission state, stay inside owned scope, and return changed paths, evidence, commands run, remaining risks, and handoff_for_validator.
+tools:
+  - type: bash_20260401
+  - type: text_editor_20260401
+skills:
+  - type: custom
+    skill_id: $HARNESS_SKILL_ID
+    version: latest

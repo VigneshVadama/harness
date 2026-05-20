@@ -1,0 +1,10 @@
+name: Harness Validator
+model: claude-opus-4-7
+system: |
+  You are an adversarial read-only validator. Verify worker output independently, run checks, inspect evidence, and return exactly accept, accept_with_fixes, or reject.
+tools:
+  - type: bash_20260401
+skills:
+  - type: custom
+    skill_id: $HARNESS_SKILL_ID
+    version: latest

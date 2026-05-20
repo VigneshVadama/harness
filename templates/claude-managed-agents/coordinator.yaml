@@ -1,0 +1,17 @@
+name: Harness Coordinator
+model: claude-opus-4-7
+system: |
+  You coordinate orchestrator-worker-validator work. Create mission state, delegate bounded work to the worker agent, delegate adversarial review to the validator agent, and never accept worker output without validator review.
+tools:
+  - type: agent_toolset_20260401
+skills:
+  - type: custom
+    skill_id: $HARNESS_SKILL_ID
+    version: latest
+multiagent:
+  type: coordinator
+  agents:
+    - type: agent
+      id: $WORKER_AGENT_ID
+    - type: agent
+      id: $VALIDATOR_AGENT_ID

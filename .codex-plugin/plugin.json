@@ -1,0 +1,27 @@
+{
+  "name": "harness",
+  "version": "0.1.0",
+  "description": "Reusable orchestrator-worker-validator harness for agent workflows.",
+  "author": {
+    "name": "Vignesh Vadama"
+  },
+  "homepage": "https://github.com/VigneshVadama/harness",
+  "repository": "https://github.com/VigneshVadama/harness",
+  "license": "MIT",
+  "keywords": ["agents", "orchestration", "validation", "codex"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Harness",
+    "shortDescription": "Orchestrator-worker-validator agent workflow harness.",
+    "longDescription": "Reusable skill and templates for planning work, dispatching bounded workers, and gating acceptance on adversarial validators.",
+    "developerName": "Vignesh Vadama",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/VigneshVadama/harness",
+    "defaultPrompt": [
+      "Use Harness to plan this task with worker missions and validator gates.",
+      "Use Harness to review this worker output adversarially before accepting it."
+    ],
+    "brandColor": "#0F766E"
+  }
+}

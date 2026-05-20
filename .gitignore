@@ -1,0 +1,13 @@
+.DS_Store
+__pycache__/
+*.py[oc]
+.pytest_cache/
+.ruff_cache/
+.pyright/
+.venv/
+dist/
+build/
+missions/
+tmp/
+!templates/**/.claude/
+!templates/**/.claude/**
