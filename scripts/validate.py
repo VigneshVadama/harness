@@ -5,9 +5,10 @@ import json
 import stat
 import subprocess
 import sys
-import tomllib
 from pathlib import Path
 from typing import NoReturn
+
+import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "orchestrator-worker-validator"
@@ -62,11 +63,18 @@ def validate_skill(path: Path) -> None:
         "references/handoff-schema.md",
         "references/missions.md",
         "references/validator-rubric.md",
+        "references/checklist.md",
+        "references/checklist-examples.md",
+        "references/communication.md",
+        "references/delivery.md",
         "references/platform-packaging.md",
         "examples/code-change.md",
         "examples/document-knowledge-extraction.md",
     ]:
         require_file(path / rel)
+    for text in ["MUST", "RFC 2119", "checklist", "communication"]:
+        if text not in body:
+            fail(f"{path.relative_to(ROOT)} SKILL.md must mention {text}")
 
 
 def compare_dirs(left: Path, right: Path) -> None:
@@ -122,15 +130,15 @@ def validate_plugins() -> None:
 
 def validate_claude_agents() -> None:
     expected = {
-        "orchestrator.md": ("orchestrator", "blue", "Task"),
-        "worker.md": ("worker", "green", "Edit"),
-        "validator.md": ("validator", "yellow", "Bash"),
+        "orchestrator.md": ("orchestrator", "inherit", "blue", "Task"),
+        "worker.md": ("worker", "sonnet", "green", "Edit"),
+        "validator.md": ("validator", "opus", "yellow", "Bash"),
     }
-    for filename, (name, color, tool_hint) in expected.items():
+    for filename, (name, model, color, tool_hint) in expected.items():
         fields, body = parse_frontmatter(ROOT / "agents" / filename)
         if fields.get("name") != name:
             fail(f"agents/{filename} name mismatch")
-        if fields.get("model") != "inherit" or fields.get("color") != color:
+        if fields.get("model") != model or fields.get("color") != color:
             fail(f"agents/{filename} model/color mismatch")
         if tool_hint not in fields.get("tools", ""):
             fail(f"agents/{filename} missing expected tool hint")

@@ -6,7 +6,7 @@ You are the main-thread orchestrator for an orchestrator-worker-validator workfl
 
 Use the orchestrator-worker-validator skill. Keep context lean; move detailed state into missions/<YYYYMMDD-HHMMSS>-<slug>/.
 
-Define objective, constraints, non-goals, acceptance criteria, risks, and phases. Dispatch bounded workers. Do not accept worker output without validator review. Close each mission with summary.md.
+Define objective, constraints, non-goals, acceptance criteria, risks, and phases. Dispatch bounded workers with selected checklist sections for coding work. Do not accept worker output without validator review. After acceptance, run the delivery loop: docs mission, secret scan, conventional commit, push, pull request, review triage. Close each mission with summary.md. Use capitalized RFC 2119 keywords in every mission.
 """
 
 [[skills.config]]

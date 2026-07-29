@@ -1,22 +1,31 @@
 {
   "name": "harness",
-  "version": "0.1.0",
-  "description": "Reusable orchestrator-worker-validator harness for agent workflows.",
+  "version": "0.2.0",
+  "description": "Complete orchestrator-worker-validator delivery harness: bounded missions, adversarial validation, no-skip coding checklist, layered communication, docs-commit-PR loop.",
   "author": {
     "name": "Vignesh Vadama"
   },
   "homepage": "https://github.com/VigneshVadama/harness",
   "repository": "https://github.com/VigneshVadama/harness",
   "license": "MIT",
-  "keywords": ["agents", "orchestration", "validation", "codex"],
+  "keywords": [
+    "agents",
+    "orchestration",
+    "validation",
+    "checklist",
+    "codex"
+  ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Harness",
     "shortDescription": "Orchestrator-worker-validator agent workflow harness.",
-    "longDescription": "Reusable skill and templates for planning work, dispatching bounded workers, and gating acceptance on adversarial validators.",
+    "longDescription": "Reusable skill and templates for planning work, dispatching bounded workers, gating acceptance on adversarial validators and a no-skip coding checklist, and delivering through docs, conventional commits, and pull-request review.",
     "developerName": "Vignesh Vadama",
     "category": "Productivity",
-    "capabilities": ["Read", "Write"],
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
     "websiteURL": "https://github.com/VigneshVadama/harness",
     "defaultPrompt": [
       "Use Harness to plan this task with worker missions and validator gates.",

@@ -2,12 +2,12 @@
 
 [![skills.sh](https://skills.sh/b/VigneshVadama/harness)](https://skills.sh/VigneshVadama/harness)
 
-Reusable orchestrator-worker-validator harness for agent workflows across Codex, Claude Code, GitHub Copilot, skills.sh, and Claude Managed Agents.
+Complete delivery harness for agent workflows across Codex, Claude Code, GitHub Copilot, skills.sh, and Claude Managed Agents. One skill carries the full loop: plan, bounded worker missions, adversarial validation, a no-skip coding checklist, layered token-efficient communication, and a docs-commit-PR delivery loop.
 
 ## What It Provides
 
-- A canonical `orchestrator-worker-validator` skill.
-- Claude Code plugin metadata with orchestrator, worker, and validator agents.
+- A canonical `orchestrator-worker-validator` skill: roles, mission state, validation gates, coding checklist, communication law (compressed agent-to-agent, action-first human-facing, ASD-STE100-derived durable docs, RFC 2119 keywords), and the delivery loop (docs mission, secret scan, conventional commits, pull-request review).
+- Claude Code plugin metadata with orchestrator, worker, and validator agents. Roles are permanent; models are one-line configuration per tool.
 - Codex plugin metadata for the skill plus copyable Codex subagent templates.
 - GitHub Copilot custom-agent templates and plugin metadata.
 - Claude Managed Agents YAML templates and optional creation script.
@@ -75,6 +75,8 @@ missions/<YYYYMMDD-HHMMSS>-<slug>/
   validator-result.md
   summary.md
 ```
+
+Coding missions carry the coding checklist. Every selected item gets one verdict: `pass` with evidence, `fail`, or `n/a` with a one-line justification. The validator rejects silent skips. After acceptance the orchestrator runs the delivery loop: docs mission, secret scan, conventional commit, push, pull request, review triage.
 
 ## Validate
 

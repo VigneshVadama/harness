@@ -49,9 +49,17 @@ changed_paths:
 summary:
 evidence:
 commands_run:
+checklist:
+  sections:
+  items:
+    - slug:
+      verdict: pass | fail | n/a
+      evidence_or_justification:
 remaining_risks:
 handoff_for_validator:
 ```
+
+The `checklist` block is REQUIRED for coding missions and omitted otherwise. Every item in the selected sections appears exactly once.
 
 ## Validator Mission
 
@@ -79,6 +87,10 @@ output_schema:
 verdict:
 commands_run:
 inspected_files:
+checklist_verified:
+  - slug:
+    worker_verdict:
+    validator_finding: confirmed | contradicted
 blockers:
   - path:
     line:
@@ -87,5 +99,7 @@ blockers:
 non_blocking_notes:
 confidence:
 ```
+
+`checklist_verified` is REQUIRED when the worker result carries a `checklist` block. Spot-verify every `n/a` and at least the highest-risk `pass` items.
 
 Workers never self-accept. Validators must be read-only unless explicitly asked to patch.
