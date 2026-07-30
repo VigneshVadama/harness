@@ -29,7 +29,7 @@ Git operations are separate calls. MUST NOT chain git commands with `&&`. Push r
 
 ## 6. Pull request
 
-Open against the default branch. Reference the driving issue. Body: what, why, plan deviations, verification commands.
+Open against the default branch. Title: conventional `type(scope): summary` with NO issue number — GitHub shows the PR number beside it and an issue ref there misreads. Issue refs live in commit subjects and the PR body. Body: what, why, plan deviations, verification commands, and the driving issue.
 
 Request Copilot code review on every PR. The review posts under `copilot-pull-request-reviewer`. `gh pr edit --add-reviewer Copilot` often fails to resolve the bot; the reliable path is the GraphQL mutation:
 
@@ -41,12 +41,14 @@ gh api graphql -f query="mutation { requestReviews(input:{pullRequestId:\"$PR\",
 
 Add project-required human reviewers when the project names them.
 
-## 7. Review loop — same PR, to green, then merge
+## 7. Review loop — same PR, every thread resolved, then merge
 
-1. Wait for the Copilot review. MUST NOT merge before it posts.
-2. Triage EVERY finding with evidence: fix it, or rebut it in a PR comment citing code or tests. No silent dismissals.
-3. After the reply, RESOLVE the review thread (GraphQL `resolveReviewThread`). A reply without resolution leaves the conversation open — triage is reply plus resolution.
-4. Push fixes to the same PR. Re-request Copilot when the diff changed materially.
-5. Merge only when every thread is resolved, required reviews are done, and CI is green.
+The sequence is fixed. Do not reorder, do not skip a step:
+
+1. Wait for the review. MUST NOT merge before it posts.
+2. Triage EVERY finding in the SAME PR: fix it, or rebut it in a thread reply citing code or tests. No silent dismissals. No follow-up-issue deferrals for in-scope findings.
+3. Push the fixes. Re-request the reviewer when the diff changed materially (some reviewers auto-review new pushes — check before re-requesting twice).
+4. Pushed fixes mark threads outdated; rebuttals leave them open. Either way, RESOLVE every conversation (GraphQL `resolveReviewThread`). Outdated is not resolved — resolve it explicitly. A reply without resolution leaves the conversation open.
+5. Merge only when: every thread resolved, required reviews done, CI green. All three. Verify thread state with a `reviewThreads` query, not by memory.
 
 Comment format: `file:L<line>: <severity>: <problem>. <fix>.` Severity: bug | risk | nit | q. Cite the checklist slug or project rubric bullet. Security findings and architecture disagreements get full paragraphs, not one-liners.

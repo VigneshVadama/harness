@@ -1,6 +1,6 @@
-# Platform Packaging
+# Packaging
 
-Paths in this file describe the upstream harness repo (github.com/VigneshVadama/harness). Vendored installs live where the installer puts them — `bunx skills add` writes `.agents/skills/orchestrator-worker-validator/`; consuming repos MAY symlink tool dirs to it. The upstream canonical skill is `skills/orchestrator-worker-validator`.
+Repo-level packaging map. This file is NOT part of the skill: vendored installs receive only `skills/orchestrator-worker-validator/`. `bunx skills add` writes `.agents/skills/orchestrator-worker-validator/` in consuming repos; they MAY symlink tool dirs to it.
 
 ## Model policy
 

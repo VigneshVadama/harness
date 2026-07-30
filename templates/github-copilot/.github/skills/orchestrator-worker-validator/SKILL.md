@@ -1,6 +1,6 @@
 ---
 name: orchestrator-worker-validator
-description: Complete delivery harness for agent work. Use for non-trivial coding, refactoring, debugging, review, extraction, or any multi-phase task. Combines lean orchestration, bounded worker missions, adversarial validation, a no-skip coding checklist, layered token-efficient communication, and a docs-commit-PR delivery loop. Trigger on complex work, code changes, code review, checklist discipline, commit, pull request, or multi-agent delegation.
+description: Use this skill for any non-trivial engineering task — coding, refactoring, debugging, code review, document extraction, or multi-step changes — even when the user only says implement, fix, review, or ship without naming a workflow. It runs the full delivery loop; plan, bounded worker missions, adversarial validation, a no-skip coding checklist, layered token-efficient communication, then docs, conventional commit, pull request, review triage to resolved threads, and merge. Do not use it for one-line answers or trivial single-file edits with no delivery step.
 license: MIT
 ---
 
@@ -10,7 +10,7 @@ One harness, full loop: plan, bounded missions, adversarial validation, checklis
 
 ## Roles
 
-Roles permanent. Models = configuration, one place per tool (references/platform-packaging.md). One agent product runs all three roles via subagents — no second peer agent required.
+Roles permanent. Models = install-time configuration, one place per tool. One agent product runs all three roles via subagents — no second peer agent required.
 
 | Role | Duty | Model |
 |---|---|---|
@@ -46,16 +46,17 @@ references/checklist.md. Orchestrator selects sections by task type in the missi
 4. Run deterministic checks.
 5. Dispatch adversarial validator.
 6. On reject: repair blockers only, add guards.
-7. Deliver per references/delivery.md: docs, secret scan, conventional commit, push, PR, Copilot review to green, merge.
+7. Deliver per references/delivery.md: docs, secret scan, conventional commit, push, PR, review triaged and every thread resolved, merge.
 8. Close mission with `summary.md`.
 
 ## References
 
-- references/handoff-schema.md — mission, worker, validator output schemas.
-- references/missions.md — shared mission-state rules.
-- references/validator-rubric.md — rejection rules.
-- references/checklist.md — coding checklist; load references/checklist-examples.md only when an item says `see examples`.
-- references/communication.md — communication law.
-- references/delivery.md — docs, commit, PR, review loop.
-- references/platform-packaging.md — plugins, templates, model configuration.
-- examples/code-change.md, examples/document-knowledge-extraction.md — complete workflows.
+Load each file at the moment named, not before:
+
+- references/handoff-schema.md — when writing a mission, worker result, or validator result.
+- references/missions.md — when creating the first mission folder of a task.
+- references/validator-rubric.md — when dispatching or acting as the validator.
+- references/checklist.md — when a coding mission starts; references/checklist-examples.md only when an item says `see examples`.
+- references/communication.md — before the first message or artifact of a session.
+- references/delivery.md — when the validator has accepted and delivery begins.
+- examples/code-change.md or examples/document-knowledge-extraction.md — when running the workflow for the first time.

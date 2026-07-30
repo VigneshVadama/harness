@@ -67,7 +67,6 @@ def validate_skill(path: Path) -> None:
         "references/checklist-examples.md",
         "references/communication.md",
         "references/delivery.md",
-        "references/platform-packaging.md",
         "examples/code-change.md",
         "examples/document-knowledge-extraction.md",
     ]:
