@@ -45,7 +45,8 @@ Add project-required human reviewers when the project names them.
 
 1. Wait for the Copilot review. MUST NOT merge before it posts.
 2. Triage EVERY finding with evidence: fix it, or rebut it in a PR comment citing code or tests. No silent dismissals.
-3. Push fixes to the same PR. Re-request Copilot when the diff changed materially.
-4. Merge only when findings are resolved, required reviews are done, and CI is green.
+3. After the reply, RESOLVE the review thread (GraphQL `resolveReviewThread`). A reply without resolution leaves the conversation open — triage is reply plus resolution.
+4. Push fixes to the same PR. Re-request Copilot when the diff changed materially.
+5. Merge only when every thread is resolved, required reviews are done, and CI is green.
 
 Comment format: `file:L<line>: <severity>: <problem>. <fix>.` Severity: bug | risk | nit | q. Cite the checklist slug or project rubric bullet. Security findings and architecture disagreements get full paragraphs, not one-liners.
