@@ -1,3 +1,3 @@
 # Scripts
 
-Deterministic validation scripts for this public repo live in the repository-level `scripts/` directory.
+This skill ships no scripts. Keep deterministic checks (rule 7) as tests, linters, or scripts in the consuming repository, wired into its CI.

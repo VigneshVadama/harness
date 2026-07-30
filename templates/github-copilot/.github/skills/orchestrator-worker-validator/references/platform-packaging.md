@@ -1,6 +1,6 @@
 # Platform Packaging
 
-The canonical skill is `skills/orchestrator-worker-validator`.
+Paths in this file describe the upstream harness repo (github.com/VigneshVadama/harness). Vendored installs live where the installer puts them — `bunx skills add` writes `.agents/skills/orchestrator-worker-validator/`; consuming repos MAY symlink tool dirs to it. The upstream canonical skill is `skills/orchestrator-worker-validator`.
 
 ## Model policy
 
