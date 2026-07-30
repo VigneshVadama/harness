@@ -89,5 +89,5 @@ output_schema:
 1. Docs worker updates affected docs; skip only when no behavior or interface changed.
 2. Secret scan on the staged diff. A finding blocks the commit.
 3. Stage explicit paths. Commit: `feat(ingest): handle empty parser rows (#42)`.
-4. Push. Open the PR referencing the issue. Request Copilot review: `gh pr edit <num> --add-reviewer Copilot`.
+4. Push. Open the PR referencing the issue. Request Copilot review with the GraphQL mutation in references/delivery.md section 6.
 5. Wait for the review, triage every finding with evidence in the same PR, push fixes, merge when green.
