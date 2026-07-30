@@ -6,77 +6,60 @@ license: MIT
 
 # Orchestrator Worker Validator
 
-One harness for the full loop: plan, bounded missions, adversarial validation, checklist gate, docs, commit, pull request, merge.
-
-The key words MUST, MUST NOT, SHOULD, and MAY are RFC 2119 keywords. Write them capitalized in every mission, rule, and review.
+One harness, full loop: plan, bounded missions, adversarial validation, checklist gate, docs, commit, PR, merge. MUST, MUST NOT, SHOULD, MAY are RFC 2119 keywords — capitalize them in every mission, rule, review.
 
 ## Roles
 
-Roles are permanent. Models are configuration.
+Roles permanent. Models = configuration, one place per tool (references/platform-packaging.md). One agent product runs all three roles via subagents — no second peer agent required.
 
-| Role | Duty | Model policy |
+| Role | Duty | Model |
 |---|---|---|
-| orchestrator | Scope, phases, decisions, dispatch, integration, user communication, final acceptance | Session model — the strongest available |
-| worker | One bounded mission with evidence and a validator handoff | Cheap competent model, minimal reasoning |
-| validator | Adversarial read-only review with independent probes | Strong model — do not economize on the gate |
-
-Each tool sets role models in exactly one place. See [references/platform-packaging.md](references/platform-packaging.md). When models change, change one line per tool. Never change the roles.
+| orchestrator | scope, phases, dispatch, integration, user comms, acceptance | session model |
+| worker | one bounded mission, evidence, handoff | cheap competent, minimal reasoning |
+| validator | adversarial read-only review, independent probes | strong — never economize the gate |
 
 ## Core rules
 
-1. The orchestrator MUST keep its context lean. Detailed state lives in the mission folder, not in chat history.
-2. Every mission MUST name scope, owned files, forbidden files, deliverables, checks, stop conditions, output schema, and the mission folder.
-3. Validators MUST try to reject with evidence and MUST return exactly `accept`, `accept_with_fixes`, or `reject`.
-4. The orchestrator MUST NOT accept worker output without a validator verdict. Workers MUST NOT self-accept.
-5. Coding missions MUST carry the coding checklist. Every selected item gets an explicit verdict. Silent skips are a rejection. See [Checklist gate](#checklist-gate).
-6. All agents MUST follow the communication law. See [Communication law](#communication-law).
-7. Repeated failures and validator findings MUST become deterministic checks, tests, scripts, or checklist items.
-8. Close completed agents. Retain only structured findings.
+1. Orchestrator context stays lean. Detailed state lives in the mission folder, not chat.
+2. Every mission MUST name scope, owned files, forbidden files, deliverables, checks, stop conditions, output schema, mission folder.
+3. Validator MUST try to reject with evidence. Verdict exactly `accept` | `accept_with_fixes` | `reject`.
+4. No acceptance without validator verdict. Workers MUST NOT self-accept.
+5. Coding missions carry the checklist. Silent skip = rejection.
+6. Communication law binds all agents.
+7. Repeated failures become deterministic checks, tests, scripts, or checklist items.
+8. Close finished agents. Keep only structured findings.
 
 ## Communication law
 
-Three layers. Read [references/communication.md](references/communication.md) before writing anything.
-
-1. **Agent to agent** (missions, handoffs, results): compressed. Drop articles, filler, hedging, pleasantries. Keep every technical fact.
-2. **Human-facing** (chat, reports): action first, numbered steps, no preamble, no recap, one concrete next action.
-3. **Durable artifacts** (docs, READMEs, ADRs, PR bodies): controlled technical English — one instruction per sentence, active voice, present tense, RFC 2119 keywords.
-
-Code, commands, paths, IDs, secret references, and error strings stay EXACT at every layer. Compression never touches them.
+Read references/communication.md before writing anything. Three layers: agent-to-agent compressed; human-facing action-first; durable artifacts in controlled English with RFC 2119 keywords. Code, commands, paths, IDs, secret refs, error strings: EXACT at every layer.
 
 ## Checklist gate
 
-The coding checklist in [references/checklist.md](references/checklist.md) is part of every coding mission and every validation.
-
-1. The orchestrator selects checklist sections by task type and lists them in the mission.
-2. The worker works with the selected sections active and reports every selected item in `worker-result.md` with one verdict: `pass` with evidence, `fail`, or `n/a` with a one-line justification.
-3. DO NOT SKIP items silently. An unreported item, an evidence-free `pass`, or an unjustified `n/a` is a validator rejection.
-4. The validator MUST independently re-verify checklist claims, not just read them.
+references/checklist.md. Orchestrator selects sections by task type in the mission. Worker reports every selected item: `pass` + evidence, `fail`, or `n/a` + one-line justification. DO NOT SKIP silently — missing verdict, evidence-free pass, unjustified n/a = validator rejection. Validator re-verifies independently.
 
 ## Workflow
 
-1. Frame objective, constraints, non-goals, acceptance criteria, risks, and phases.
+1. Frame objective, constraints, non-goals, acceptance criteria, risks, phases.
 2. Create `missions/<YYYYMMDD-HHMMSS>-<slug>/mission.md`.
-3. Dispatch bounded workers with disjoint write sets whenever possible.
+3. Dispatch bounded workers, disjoint write sets when possible.
 4. Run deterministic checks.
-5. Dispatch an adversarial validator.
-6. If rejected, repair only blockers and add guards when feasible.
-7. Deliver: docs mission, secret scan, conventional commit, push, pull request, review loop. See [references/delivery.md](references/delivery.md).
-8. Close the mission with `summary.md`.
+5. Dispatch adversarial validator.
+6. On reject: repair blockers only, add guards.
+7. Deliver per references/delivery.md: docs, secret scan, conventional commit, push, PR, Copilot review to green, merge.
+8. Close mission with `summary.md`.
 
 ## References
 
-- Read [references/handoff-schema.md](references/handoff-schema.md) for mission, worker, and validator output schemas.
-- Read [references/missions.md](references/missions.md) for shared mission-state rules.
-- Read [references/validator-rubric.md](references/validator-rubric.md) for adversarial review rules.
-- Read [references/checklist.md](references/checklist.md) for the coding checklist; load [references/checklist-examples.md](references/checklist-examples.md) only when an item says `see examples`.
-- Read [references/communication.md](references/communication.md) for the communication law.
-- Read [references/delivery.md](references/delivery.md) for the docs, commit, and pull-request loop.
-- Read [references/platform-packaging.md](references/platform-packaging.md) before changing plugin, template, or model configuration.
-- See [examples/code-change.md](examples/code-change.md) and [examples/document-knowledge-extraction.md](examples/document-knowledge-extraction.md) for complete workflows.
+- references/handoff-schema.md — mission, worker, validator output schemas.
+- references/missions.md — shared mission-state rules.
+- references/validator-rubric.md — rejection rules.
+- references/checklist.md — coding checklist; load references/checklist-examples.md only when an item says `see examples`.
+- references/communication.md — communication law.
+- references/delivery.md — docs, commit, PR, review loop.
+- references/platform-packaging.md — plugins, templates, model configuration.
+- examples/code-change.md, examples/document-knowledge-extraction.md — complete workflows.
 
 ## Validation
-
-Run:
 
 ```sh
 python3 scripts/validate.py

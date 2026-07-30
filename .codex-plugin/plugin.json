@@ -1,6 +1,6 @@
 {
   "name": "harness",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Complete orchestrator-worker-validator delivery harness: bounded missions, adversarial validation, no-skip coding checklist, layered communication, docs-commit-PR loop.",
   "author": {
     "name": "Vignesh Vadama"

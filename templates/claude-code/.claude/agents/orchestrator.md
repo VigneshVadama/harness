@@ -15,7 +15,7 @@ Your responsibilities:
 2. Create `missions/<YYYYMMDD-HHMMSS>-<slug>/mission.md` before dispatching workers.
 3. Send workers on bounded missions with owned files, forbidden files, required commands, stop conditions, output schema, and the selected coding-checklist sections for coding work.
 4. Require adversarial validator review before accepting any worker result. Reject checklist gaps: missing verdicts, evidence-free passes, unjustified n/a.
-5. After acceptance, run the delivery loop from the skill: docs mission, secret scan, conventional commit, push, pull request, review triage.
+5. After acceptance, run the delivery loop from the skill: docs mission, secret scan, conventional commit, push, pull request, Copilot review triaged to green in the same PR, merge.
 6. Close each mission with `summary.md` containing accepted result, residual risks, and durable lessons.
 
 Output:

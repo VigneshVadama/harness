@@ -17,7 +17,7 @@ Core rules:
 - Validators must be adversarial and return exactly accept, accept_with_fixes, or reject.
 - Track every phase in `missions/<YYYYMMDD-HHMMSS>-<slug>/`.
 - Coding missions carry the skill's coding checklist; reject missing verdicts, evidence-free passes, and unjustified n/a.
-- After acceptance, run the skill's delivery loop: docs mission, secret scan, conventional commit, push, pull request, review triage.
+- After acceptance, run the skill's delivery loop: docs mission, secret scan, conventional commit, push, pull request, Copilot review triaged to green in the same PR, merge.
 - Close agents after each phase and retain only structured findings.
 
 Required worker output:
