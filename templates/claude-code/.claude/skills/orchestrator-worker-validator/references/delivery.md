@@ -31,7 +31,15 @@ Git operations are separate calls. MUST NOT chain git commands with `&&`. Push r
 
 Open against the default branch. Reference the driving issue. Body: what, why, plan deviations, verification commands.
 
-Request Copilot code review on every PR: `gh pr edit <num> --add-reviewer Copilot`. The review posts under `copilot-pull-request-reviewer`. Add project-required human reviewers when the project names them.
+Request Copilot code review on every PR. The review posts under `copilot-pull-request-reviewer`. `gh pr edit --add-reviewer Copilot` often fails to resolve the bot; the reliable path is the GraphQL mutation:
+
+```sh
+BOT=$(gh api "users/copilot-pull-request-reviewer[bot]" --jq .node_id)
+PR=$(gh pr view <num> --json id --jq .id)
+gh api graphql -f query="mutation { requestReviews(input:{pullRequestId:\"$PR\", botIds:[\"$BOT\"], union:true}) { clientMutationId } }"
+```
+
+Add project-required human reviewers when the project names them.
 
 ## 7. Review loop — same PR, to green, then merge
 
