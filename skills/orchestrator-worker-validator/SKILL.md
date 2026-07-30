@@ -28,6 +28,7 @@ Roles permanent. Models = configuration, one place per tool (references/platform
 6. Communication law binds all agents.
 7. Repeated failures become deterministic checks, tests, scripts, or checklist items.
 8. Close finished agents. Keep only structured findings.
+9. VERY IMPORTANT — dependency versions come from the package registry at install time (query latest or compatible: `npm view`, `pip index versions`, `go list -m -versions`, registry.terraform.io, `brew info`). MUST NOT write a version from model memory: stale or hallucinated pins are a supply-chain attack surface.
 
 ## Communication law
 

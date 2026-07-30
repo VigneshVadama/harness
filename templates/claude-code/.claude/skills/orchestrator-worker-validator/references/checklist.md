@@ -46,6 +46,7 @@ The orchestrator selects sections by task type. The worker reports every item in
 - [ ] `existing-code/learn-by-modifying` Learn a codebase by changing it, not just reading it.
 - [ ] `existing-code/follow-conventions` Match the surrounding style and idioms of the file you are editing.
 - [ ] `existing-code/read-neighbors` Read neighboring code before introducing a style, helper, dependency, or pattern.
+- [ ] `existing-code/registry-resolved-versions` Resolve every new or changed dependency version against the live package registry; never write a version from memory.
 - [ ] `existing-code/trace-boundaries` Trace inputs, outputs, side effects, and ownership boundaries for the touched path.
 - [ ] `existing-code/check-tests-first` Check existing tests, fixtures, scripts, and CI commands before adding new ones.
 - [ ] `existing-code/low-risk-first` Start with low-risk, high-visibility changes in unfamiliar code.

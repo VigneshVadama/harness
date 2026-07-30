@@ -12,6 +12,7 @@ Reject for:
 - Scope expansion.
 - Worker self-acceptance.
 - Silent changes outside owned files.
+- A new or changed dependency version with no registry-lookup evidence.
 
 Checklist rejections (coding missions):
 
