@@ -1,9 +1,9 @@
 {
   "name": "harness",
   "description": "Complete orchestrator-worker-validator delivery harness: bounded missions, adversarial validation, no-skip coding checklist, layered communication, docs-commit-PR loop.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": {
-    "name": "Vignesh Vadama"
+    "name": "Vignesh Parameswaran"
   },
   "repository": "https://github.com/VigneshVadama/harness",
   "license": "MIT",
