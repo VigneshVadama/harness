@@ -58,9 +58,3 @@ references/checklist.md. Orchestrator selects sections by task type in the missi
 - references/delivery.md — docs, commit, PR, review loop.
 - references/platform-packaging.md — plugins, templates, model configuration.
 - examples/code-change.md, examples/document-knowledge-extraction.md — complete workflows.
-
-## Validation
-
-```sh
-python3 scripts/validate.py
-```
