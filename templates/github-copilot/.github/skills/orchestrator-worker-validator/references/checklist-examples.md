@@ -2,21 +2,7 @@
 
 Concrete patterns for selected checklist items. Look up by slug ID and load this file only when needed.
 
-## `naming/reveal-intent`
-
-```python
-# bad
-def conv(d):
-    return d * 86400
-
-# good
-SECONDS_PER_DAY = 86_400
-
-def days_to_seconds(days):
-    return days * SECONDS_PER_DAY
-```
-
-## `naming/no-lies`
+## `core/names-reveal-intent`
 
 ```python
 # bad
@@ -30,146 +16,70 @@ favorite_color = "yellow"
 def make_yellow(): return "yellow"
 ```
 
-## `naming/exploit-context`
-
-```python
-# bad
-class WidgetList:
-    def number_of_widgets(self) -> int: ...
-    def add_widget(self, widget: Widget): ...
-
-# good
-class WidgetList:
-    def size(self) -> int: ...
-    def add(self, widget: Widget): ...
-```
-
-## `presentation/layout-prevents-bugs`
-
-```c
-// bad: misleading indentation; exit always runs
-if (!ok)
-    log_error();
-    exit(1);
-
-// good: control flow is unambiguous
-if (!ok) {
-    log_error();
-    exit(1);
-}
-```
-
-## `presentation/structure-as-prose`
-
-```python
-# bad: one wall of unrelated steps
-def handle_order(order):
-    order = sanitize(order)
-    if not order.is_valid:
-        raise InvalidOrder
-    inventory.reserve(order.items)
-    payments.charge(order.customer, order.total)
-    notifications.send(order.customer, "confirmed")
-    audit.record(order)
-
-# good: visual paragraphs follow the work
-def handle_order(order):
-    order = sanitize(order)
-    if not order.is_valid:
-        raise InvalidOrder
-
-    inventory.reserve(order.items)
-    payments.charge(order.customer, order.total)
-
-    notifications.send(order.customer, "confirmed")
-    audit.record(order)
-```
-
-## `presentation/declare-at-use`
-
-```python
-# bad: result is declared far from meaning
-result = None
-prepare()
-validate()
-result = compute(input)
-
-# good: result appears when it becomes useful
-prepare()
-validate()
-result = compute(input)
-```
-
-## `presentation/comments-explain-why`
-
-```python
-# bad: repeats the code
-# increment attempts by one
-attempts += 1
-
-# good: explains the constraint
-# Provider counts the first send as retry zero.
-attempts += 1
-```
-
-## `simplification/delete-dead-code`
-
-```python
-# bad: the inner branch cannot run
-def process(items):
-    if not items:
-        return
-    for item in items:
-        if not items:
-            break
-        handle(item)
-
-# good
-def process(items):
-    if not items:
-        return
-    for item in items:
-        handle(item)
-```
-
-## `simplification/no-flappy-booleans`
+## `core/check-every-return`
 
 ```go
 // bad
-if user.Enabled && user.EmailVerified {
-    return true
-}
-return false
+data, _ := os.ReadFile(path)
+return parseConfig(data)
 
 // good
-return user.Enabled && user.EmailVerified
+data, err := os.ReadFile(path)
+if err != nil {
+    return Config{}, fmt.Errorf("read config %q: %w", path, err)
+}
+return parseConfig(data)
 ```
 
-## `simplification/trivial-value-branch`
+## `core/no-swallowed-exceptions`
 
 ```python
 # bad
-def path_for(url):
-    if url is None:
-        return None
-    return url.path
+try:
+    save(record)
+except Exception:
+    pass
 
 # good
-def path_for(url):
-    return None if url is None else url.path
+try:
+    save(record)
+except DiskFull:
+    rotate_logs()
+    save(record)
 ```
 
-## `simplification/inline-trivial-temps`
+## `core/root-cause`
 
 ```python
-# bad
-hungry = is_hungry()
-ripe = bananas_are_ripe()
-should_pick = hungry and ripe
-return should_pick
+# bad: clamps the symptom
+def total(items):
+    value = sum(item.price for item in items)
+    return max(value, 0)
 
-# good
-return is_hungry() and bananas_are_ripe()
+# good: rejects the invalid source state
+def total(items):
+    for item in items:
+        if item.price < 0:
+            raise InvalidPrice(item)
+    return sum(item.price for item in items)
+```
+
+## `core/no-implementation-mirror`
+
+```ts
+// bad: verifies implementation trivia
+it("calls normalizeEmail twice", () => {
+  expect(normalizeEmail).toHaveBeenCalledTimes(2);
+});
+
+// good: verifies behavior
+it("deduplicates users with case-insensitive emails", () => {
+  const users = dedupeUsers([
+    { email: "Ava@example.com" },
+    { email: "ava@example.com" },
+  ]);
+  expect(users).toHaveLength(1);
+});
 ```
 
 ## `simplification/dry-with-care`
@@ -185,38 +95,6 @@ def format_invoice(invoice):
 
 def format_receipt(receipt):
     return f"RCPT {receipt.id}: paid {receipt.total:.2f}"
-```
-
-## `errors/check-every-return`
-
-```go
-// bad
-data, _ := os.ReadFile(path)
-return parseConfig(data)
-
-// good
-data, err := os.ReadFile(path)
-if err != nil {
-    return Config{}, fmt.Errorf("read config %q: %w", path, err)
-}
-return parseConfig(data)
-```
-
-## `errors/no-swallowed-exceptions`
-
-```python
-# bad
-try:
-    save(record)
-except Exception:
-    pass
-
-# good
-try:
-    save(record)
-except DiskFull:
-    rotate_logs()
-    save(record)
 ```
 
 ## `errors/graceful-shutdown`
@@ -270,7 +148,7 @@ good:
   Next: change parser behavior only if that test reproduces the failure.
 ```
 
-## `bugs/binary-chop`
+## `bugs/bisect-history`
 
 ```text
 Bug: parser fails on a large input.
@@ -282,81 +160,7 @@ Bug: parser fails on a large input.
 The same shape works for commits, config flags, and dependency versions.
 ```
 
-## `bugs/root-cause-not-symptom`
-
-```python
-# bad: clamps the symptom
-def total(items):
-    value = sum(item.price for item in items)
-    return max(value, 0)
-
-# good: rejects the invalid source state
-def total(items):
-    for item in items:
-        if item.price < 0:
-            raise InvalidPrice(item)
-    return sum(item.price for item in items)
-```
-
-## `tests/arrange-act-assert`
-
-```python
-def test_uppercase_capitalizes_every_letter():
-    sentence = "this string should be uppercase."
-
-    result = sentence.upper()
-
-    assert result == "THIS STRING SHOULD BE UPPERCASE."
-```
-
-## `tests/spec-style-names`
-
-```python
-# bad
-def test_list_1(): ...
-def test_list_2(): ...
-
-# good
-def test_new_list_is_empty(): ...
-def test_appending_increments_size(): ...
-```
-
-## `tests/no-implementation-mirror`
-
-```ts
-// bad: verifies implementation trivia
-it("calls normalizeEmail twice", () => {
-  expect(normalizeEmail).toHaveBeenCalledTimes(2);
-});
-
-// good: verifies behavior
-it("deduplicates users with case-insensitive emails", () => {
-  const users = dedupeUsers([
-    { email: "Ava@example.com" },
-    { email: "ava@example.com" },
-  ]);
-  expect(users).toHaveLength(1);
-});
-```
-
-## `tests/test-doubles`
-
-```python
-# bad: touches real infrastructure
-def test_user_lookup():
-    db = connect("postgres://prod-replica")
-    assert lookup(db, 42).name == "Ada"
-
-# good: injects a small fake boundary
-class StubDB:
-    def fetch(self, user_id):
-        return {"id": 42, "name": "Ada"}
-
-def test_user_lookup():
-    assert lookup(StubDB(), 42).name == "Ada"
-```
-
-## `complexity/break-cycles`
+## `design/loose-coupling`
 
 ```python
 # bad: Order and Invoice depend on each other
@@ -377,7 +181,7 @@ class Invoice:
         self.source = source
 ```
 
-## `complexity/api-prevents-misuse`
+## `design/api-prevents-misuse`
 
 ```python
 # bad: caller can forget cleanup
@@ -389,7 +193,7 @@ with open_file(path) as file:
     read(file)
 ```
 
-## `version-control/clear-messages`
+## `git/atomic-commits`
 
 ```text
 bad:
@@ -411,16 +215,4 @@ bad:
 good:
   Check out the release version in a clean directory, install from
   lockfiles, run the release command, and record the artifact identity.
-```
-
-## `collaboration/actionable-review`
-
-```text
-weak:
-  This is confusing.
-
-useful:
-  `timeoutMs` is passed as seconds here, so callers using the documented
-  millisecond value wait 1000x longer. Rename the parameter or convert
-  before calling `setTimeout`.
 ```

@@ -8,12 +8,12 @@ Roles are permanent; models are configuration. Each tool pins role models in exa
 
 | Tool | Where | Current default |
 |---|---|---|
-| Claude Code | `agents/*.md` frontmatter `model:` | orchestrator `inherit` (session), worker `sonnet`, validator `opus` |
+| Claude Code | `agents/*.md` frontmatter `model:` | orchestrator `opus`, worker `sonnet`, validator `haiku`; the orchestrator escalates the validator to `opus` per mission (destructive or replacing plans, migrations, security-sensitive changes) |
 | Codex | `templates/codex/.codex/agents/*.toml` `model` + `model_reasoning_effort` | set `model` per deployment; worker effort `low`, validator `high`, orchestrator `xhigh` |
 | GitHub Copilot | `github-copilot/agents/*.agent.md` frontmatter `model:` | unset: Copilot default model |
 | Claude Managed Agents | `templates/claude-managed-agents/*.yaml` `model:` | coordinator `claude-opus-5-5`, worker `claude-sonnet-5-5`, validator `claude-haiku-5-5` |
 
-Pick a cheap competent model for workers and a strong model for validators. When models change, update these files only. MUST NOT encode model names anywhere else.
+Pick a cheap competent model for workers; validators default cheap and escalate for risky missions. When models change, update these files only. Versioned model ids live only in per-tool config files and this table; the skill text names model families only.
 
 ## Codex
 

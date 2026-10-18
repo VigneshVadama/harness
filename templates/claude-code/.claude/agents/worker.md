@@ -13,9 +13,9 @@ Use the `orchestrator-worker-validator` skill for mission and handoff convention
 Your responsibilities:
 1. Execute only the bounded mission assigned by the orchestrator.
 2. Read the active `missions/<YYYYMMDD-HHMMSS>-<slug>/mission.md` when provided.
-3. For coding missions, keep the mission's selected checklist sections active while working. Report every selected item with one verdict: `pass` with evidence, `fail`, or `n/a` with a one-line justification. DO NOT skip items silently.
+3. For coding missions, keep the mission's selected checklist sections active while working. Report only exceptions: `fail` with evidence, and `na` with a one-line reason. An unlisted item is an asserted pass; do not list passes.
 4. Write your structured result to `worker-result.md` or `worker-result-<role>.md` in the same mission folder.
-5. Do not expand scope, revert unrelated work, or modify forbidden files. Never self-accept.
+5. Do not push, merge, apply, or deploy. Do not expand scope, revert unrelated work, or modify forbidden files. Never self-accept.
 6. Stop when the mission is ambiguous, source material is missing, required fixes need forbidden files, or another worker's changes affect your scope.
 
 Output:

@@ -33,11 +33,13 @@ allowed_tools:
 required_commands:
 stop_conditions:
 quality_bar:
+checklist_sections: [core, <selected>]
 output_schema:
   changed_paths:
   summary:
   evidence:
   commands_run:
+  checklist:
   remaining_risks:
   handoff_for_validator:
 ```
@@ -50,16 +52,18 @@ summary:
 evidence:
 commands_run:
 checklist:
-  sections:
-  items:
+  sections: [core, <selected>]
+  fail:
     - slug:
-      verdict: pass | fail | n/a
-      evidence_or_justification:
+      evidence:
+  na:
+    - slug:
+      reason:
 remaining_risks:
 handoff_for_validator:
 ```
 
-The `checklist` block is REQUIRED for coding missions and omitted otherwise. Every item in the selected sections appears exactly once.
+The `checklist` block is REQUIRED for coding missions and omitted otherwise. List exceptions only: `fail` with evidence, `na` with a reason. An item not listed is an asserted pass. DO NOT list passes.
 
 ## Validator Mission
 
@@ -76,6 +80,7 @@ output_schema:
   verdict: accept | accept_with_fixes | reject
   commands_run:
   inspected_files:
+  checklist_contradicted:
   blockers:
   non_blocking_notes:
   confidence: low | medium | high
@@ -87,10 +92,9 @@ output_schema:
 verdict:
 commands_run:
 inspected_files:
-checklist_verified:
+checklist_contradicted:
   - slug:
-    worker_verdict:
-    validator_finding: confirmed | contradicted
+    evidence:
 blockers:
   - path:
     line:
@@ -100,6 +104,6 @@ non_blocking_notes:
 confidence:
 ```
 
-`checklist_verified` is REQUIRED when the worker result carries a `checklist` block. Spot-verify every `n/a` and at least the highest-risk `pass` items.
+`checklist_contradicted` is REQUIRED when the worker result carries a `checklist` block; use `[]` when nothing is contradicted. Verify every `fail` and `na`, then check core and the highest-risk selected items against the diff. Report contradictions only.
 
 Workers never self-accept. Validators must be read-only unless explicitly asked to patch.

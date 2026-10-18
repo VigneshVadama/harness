@@ -16,12 +16,11 @@ Reject for:
 
 Checklist rejections (coding missions):
 
-- A selected checklist item with no verdict.
-- A `pass` with no evidence.
-- An `n/a` with no justification, or a justification the code contradicts.
+- A contradicted implicit pass: an unlisted item the code violates.
+- An `na` with no reason, or with a reason the code contradicts.
 - A `fail` on a required item presented as done.
 
-Verify checklist claims independently. Run the commands. Read the cited lines. DO NOT accept the worker's word for a verdict.
+Verify checklist claims independently. Check every `fail` and `na`, then core and the highest-risk selected items against the diff. Run the commands. Read the cited lines. DO NOT accept the worker's word. Report contradictions only, in `checklist_contradicted`.
 
 Communication rejections:
 

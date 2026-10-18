@@ -2,11 +2,11 @@
 
 [![skills.sh](https://skills.sh/b/VigneshVadama/harness)](https://skills.sh/VigneshVadama/harness)
 
-Complete delivery harness for agent workflows across Codex, Claude Code, GitHub Copilot, skills.sh, and Claude Managed Agents. One skill carries the full loop: plan, bounded worker missions, adversarial validation, a no-skip coding checklist, layered token-efficient communication, and a docs-commit-PR delivery loop.
+Complete delivery harness for agent workflows across Codex, Claude Code, GitHub Copilot, skills.sh, and Claude Managed Agents. One skill carries the full loop: plan, bounded worker missions, adversarial validation, an exception-based coding checklist, layered token-efficient communication, and a delivery loop that ends at a local commit.
 
 ## What It Provides
 
-- A canonical `orchestrator-worker-validator` skill: roles, mission state, validation gates, coding checklist, communication law (compressed agent-to-agent, action-first human-facing, ASD-STE100-derived durable docs, RFC 2119 keywords), and the delivery loop (docs mission, secret scan, conventional commits, pull-request review).
+- A canonical `orchestrator-worker-validator` skill: roles, mission state, validation gates, coding checklist, communication law (compressed agent-to-agent, action-first human-facing, ASD-STE100-derived durable docs, RFC 2119 keywords), and the delivery loop (docs check, secret scan, conventional commits; push, PR, and merge only when asked).
 - Claude Code plugin metadata with orchestrator, worker, and validator agents. Roles are permanent; models are one-line configuration per tool.
 - Codex plugin metadata for the skill plus copyable Codex subagent templates.
 - GitHub Copilot custom-agent templates and plugin metadata.
@@ -60,23 +60,22 @@ The script is dry-run by default and does not create live agents unless `--apply
 
 ## Workflow
 
-The harness separates work into three roles:
+Use it for multi-file or multi-repo engineering work, or by naming `harness` or `orchestrator-worker-validator`. It is not for questions or single-file edits. The harness separates work into three roles:
 
 - `orchestrator`: owns scope, mission state, worker dispatch, validation gates, and final acceptance.
 - `worker`: executes one bounded mission and returns evidence.
-- `validator`: reviews adversarially, independently probes claims, and returns `accept`, `accept_with_fixes`, or `reject`.
+- `validator`: the default reviewer; reviews adversarially, independently probes claims, and returns `accept`, `accept_with_fixes`, or `reject`.
 
-Use ignored mission folders for shared state:
+Use ignored mission folders for shared state. The folder is deleted when the mission closes, after durable lessons move into tracked files; the summary goes to the user:
 
 ```text
 missions/<YYYYMMDD-HHMMSS>-<slug>/
   mission.md
   worker-result.md
   validator-result.md
-  summary.md
 ```
 
-Coding missions carry the coding checklist. Every selected item gets one verdict: `pass` with evidence, `fail`, or `n/a` with a one-line justification. The validator rejects silent skips. After acceptance the orchestrator runs the delivery loop: docs mission, secret scan, conventional commit, push, pull request, review triage.
+Coding missions carry the coding checklist, reported by exception: the worker lists only `fail` and `na` (with reason); an unlisted item is an asserted pass. The validator verifies the listed items, checks core items against the diff, and rejects any contradiction. After acceptance the orchestrator runs the delivery loop: docs check, secret scan, explicit-path stage, conventional commit locally. It stops before push, merge, `terraform apply`, and deploy unless you asked for that action in the task.
 
 ## Validate
 

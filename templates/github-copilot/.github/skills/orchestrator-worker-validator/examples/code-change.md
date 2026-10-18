@@ -9,7 +9,7 @@ acceptance_criteria:
   - requested behavior works
   - tests/lint/type checks pass
   - no unrelated files changed
-  - every selected checklist item has a verdict with evidence or justification
+  - checklist holds: core plus selected sections, exceptions reported, none contradicted
   - validator verdict is accept
 ```
 
@@ -26,13 +26,12 @@ forbidden_files:
   - README.md
   - docs/**
 checklist_sections: # new code or refactor
+  - core
   - existing-code
-  - naming
-  - presentation
+  - readability
   - errors
   - tests
-  - complexity
-  - release
+  - design
 required_commands:
   - uv run pytest tests/test_parser.py
 stop_conditions:
@@ -51,17 +50,16 @@ output_schema:
 
 ```yaml
 checklist:
-  sections: [existing-code, naming, presentation, errors, tests, complexity, release]
-  items:
-    - slug: errors/check-every-return
-      verdict: pass
-      evidence_or_justification: "parse_row handles None from _split (parser.py:88); test_parser.py::test_empty_row covers it"
-    - slug: release/clean-checkout
-      verdict: n/a
-      evidence_or_justification: "no release in this mission; change ships via normal PR flow"
+  sections: [core, existing-code, readability, errors, tests, design]
+  fail:
+    - slug: errors/concurrency-paths
+      evidence: "parse_batch shares a cache across threads (parser.py:140); blocker: the fix needs src/cache.py, a forbidden file"
+  na:
+    - slug: errors/graceful-shutdown
+      reason: "parser is synchronous and holds no resources"
 ```
 
-Every item in the selected sections appears. An `n/a` without a justification is a validator rejection.
+Unlisted items are asserted passes. An `na` without a reason, or a contradicted reason, is a validator rejection.
 
 ## Validator Mission
 
@@ -73,12 +71,12 @@ required_commands:
 independent_probes:
   - inspect changed code paths
   - test edge cases not mentioned by worker
-  - re-verify checklist verdicts; spot-check every n/a
+  - verify every fail and na; check core and the highest-risk selected items against the diff
 output_schema:
   verdict: accept | accept_with_fixes | reject
   commands_run:
   inspected_files:
-  checklist_verified:
+  checklist_contradicted:
   blockers:
   non_blocking_notes:
   confidence:
@@ -86,8 +84,8 @@ output_schema:
 
 ## Delivery (after accept)
 
-1. Docs worker updates affected docs; skip only when no behavior or interface changed.
-2. Secret scan on the staged diff. A finding blocks the commit.
-3. Stage explicit paths. Commit: `feat(ingest): handle empty parser rows (#42)`.
-4. Push. Open the PR referencing the issue. Request Copilot review with the GraphQL mutation in references/delivery.md section 6.
-5. Wait for the review, triage every finding with evidence in the same PR, push fixes, merge when green.
+1. The validator is the reviewer. Copilot PR review only if the user or project asks.
+2. Docs worker updates affected docs; skip only when no behavior or interface changed.
+3. Secret scan on the staged diff. A finding blocks the commit.
+4. Stage explicit paths. Commit locally: `feat(ingest): handle empty parser rows (#42)`.
+5. STOP. Push, PR, and merge only if the user asked for them.

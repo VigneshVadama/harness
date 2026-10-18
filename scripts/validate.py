@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import stat
 import subprocess
 import sys
@@ -73,6 +74,23 @@ def validate_skill(path: Path) -> None:
     for text in ["MUST", "RFC 2119", "checklist", "communication"]:
         if text not in body:
             fail(f"{path.relative_to(ROOT)} SKILL.md must mention {text}")
+    skill_bytes = len((path / "SKILL.md").read_bytes())
+    if skill_bytes > 3200 or len(fields["description"]) > 400:
+        fail(
+            f"{path.relative_to(ROOT)} SKILL.md over budget: {skill_bytes} bytes (max 3200), description max 400 chars"
+        )
+    validate_checklist_examples(path)
+
+
+def validate_checklist_examples(path: Path) -> None:
+    checklist = read(path / "references" / "checklist.md")
+    examples = read(path / "references" / "checklist-examples.md")
+    needed = set(re.findall(r"- \[ \] `([^`]+)`.*see examples", checklist))
+    present = set(re.findall(r"^## `([^`]+)`", examples, flags=re.MULTILINE))
+    if needed != present:
+        fail(
+            f"checklist examples mismatch: missing {sorted(needed - present)}, orphaned {sorted(present - needed)}"
+        )
 
 
 def compare_dirs(left: Path, right: Path) -> None:
@@ -133,9 +151,9 @@ def validate_plugins() -> None:
 
 def validate_claude_agents() -> None:
     expected = {
-        "orchestrator.md": ("orchestrator", "inherit", "blue", "Task"),
+        "orchestrator.md": ("orchestrator", "opus", "blue", "Task"),
         "worker.md": ("worker", "sonnet", "green", "Edit"),
-        "validator.md": ("validator", "opus", "yellow", "Bash"),
+        "validator.md": ("validator", "haiku", "yellow", "Bash"),
     }
     for filename, (name, model, color, tool_hint) in expected.items():
         fields, body = parse_frontmatter(ROOT / "agents" / filename)
