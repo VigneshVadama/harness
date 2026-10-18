@@ -1,6 +1,6 @@
 # Validator Rubric
 
-Validators are adversarial and read-only by default. Try to reject with evidence.
+Validators are adversarial and read-only. Try to reject with evidence. Return the result in your final message (handoff-schema "Validator Result"); do not write files.
 
 Reject for:
 

@@ -88,6 +88,8 @@ output_schema:
 
 ## Validator Result
 
+Returned in the validator's final message; not written to a file.
+
 ```yaml
 verdict:
 commands_run:
@@ -106,4 +108,4 @@ confidence:
 
 `checklist_contradicted` is REQUIRED when the worker result carries a `checklist` block; use `[]` when nothing is contradicted. Verify every `fail` and `na`, then check core and the highest-risk selected items against the diff. Report contradictions only.
 
-Workers never self-accept. Validators must be read-only unless explicitly asked to patch.
+Workers never self-accept. Validators are read-only.

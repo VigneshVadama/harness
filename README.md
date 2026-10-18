@@ -2,77 +2,39 @@
 
 [![skills.sh](https://skills.sh/b/VigneshVadama/harness)](https://skills.sh/VigneshVadama/harness)
 
-Complete delivery harness for agent workflows across Codex, Claude Code, GitHub Copilot, skills.sh, and Claude Managed Agents. One skill carries the full loop: plan, bounded worker missions, adversarial validation, an exception-based coding checklist, layered token-efficient communication, and a delivery loop that ends at a local commit.
-
-## What It Provides
-
-- A canonical `orchestrator-worker-validator` skill: roles, mission state, validation gates, coding checklist, communication law (compressed agent-to-agent, action-first human-facing, ASD-STE100-derived durable docs, RFC 2119 keywords), and the delivery loop (docs check, secret scan, conventional commits; push, PR, and merge only when asked).
-- Claude Code plugin metadata with orchestrator, worker, and validator agents. Roles are permanent; models are one-line configuration per tool.
-- Codex plugin metadata for the skill plus copyable Codex subagent templates.
-- GitHub Copilot custom-agent templates and plugin metadata.
-- Claude Managed Agents YAML templates and optional creation script.
-- Validation scripts that check structure, frontmatter, mirror drift, and platform-specific constraints.
+Harness is an agent skill for multi-file and multi-repo engineering work. It splits the work into bounded worker missions, gates each result with an adversarial read-only validator, and ends at a local commit. It also carries an exception-based coding checklist and communication rules (compressed between agents, action-first to people).
 
 ## Install
 
-### skills.sh
+With skills.sh:
 
 ```sh
 npx skills add VigneshVadama/harness
 ```
 
-### Claude Code Plugin
+Manual: copy or symlink `skills/harness/` into the skills directory of your agent.
 
-For local testing:
+- Claude Code reads `~/.claude/skills/`.
+- OpenCode reads `~/.config/opencode/skills/`, `~/.claude/skills/` and `~/.agents/skills/`.
 
-```sh
-claude --plugin-dir .
-```
-
-The plugin includes:
-
-- `skills/orchestrator-worker-validator/`
-- `agents/orchestrator.md`
-- `agents/worker.md`
-- `agents/validator.md`
-
-### Codex Plugin
-
-Use this repo as a Codex plugin. The Codex plugin manifest is at `.codex-plugin/plugin.json` and exposes the canonical skill through `skills/`.
-
-To use the Codex subagent templates in a project, copy `templates/codex/.codex/` into that project. The templates point at the plugin skill path `./skills/orchestrator-worker-validator/SKILL.md`.
-
-### GitHub Copilot
-
-Copy `templates/github-copilot/.github/` into a repository to use the Copilot cloud custom agents and project skill.
-
-The custom agents are also available in `github-copilot/agents/` for awesome-copilot style submissions.
-
-### Claude Managed Agents
-
-Use `templates/claude-managed-agents/*.yaml` as API templates. Upload the custom skill first, set `HARNESS_SKILL_ID`, then run the optional helper:
-
-```sh
-templates/claude-managed-agents/scripts/create-managed-agents.sh --dry-run
-```
-
-The script is dry-run by default and does not create live agents unless `--apply` is passed.
+One install serves both: put the directory at `~/.agents/skills/harness/` and symlink `~/.claude/skills/harness` to it. OpenCode keys skills by directory name, so it loads the skill once.
 
 ## Workflow
 
-Use it for multi-file or multi-repo engineering work, or by naming `harness` or `orchestrator-worker-validator`. It is not for questions or single-file edits. The harness separates work into three roles:
+Use it for multi-file or multi-repo engineering work, or by naming `harness`. It is not for questions or single-file edits. It has three roles:
 
 - `orchestrator`: owns scope, mission state, worker dispatch, validation gates, and final acceptance.
 - `worker`: executes one bounded mission and returns evidence.
-- `validator`: the default reviewer; reviews adversarially, independently probes claims, and returns `accept`, `accept_with_fixes`, or `reject`.
+- `validator`: reviews adversarially and read-only, probes claims independently, and returns `accept`, `accept_with_fixes`, or `reject` in its final message.
 
-Use ignored mission folders for shared state. The folder is deleted when the mission closes, after durable lessons move into tracked files; the summary goes to the user:
+Models: orchestrator Opus, workers Sonnet, validator Haiku. The validator runs on Opus for destructive or replacing plans, migrations, and security-sensitive changes.
+
+Shared state lives in an ignored mission folder. It is deleted when the mission closes, after durable lessons move into tracked files. The summary goes to the user.
 
 ```text
 missions/<YYYYMMDD-HHMMSS>-<slug>/
   mission.md
   worker-result.md
-  validator-result.md
 ```
 
 Coding missions carry the coding checklist, reported by exception: the worker lists only `fail` and `na` (with reason); an unlisted item is an asserted pass. The validator verifies the listed items, checks core items against the diff, and rejects any contradiction. After acceptance the orchestrator runs the delivery loop: docs check, secret scan, explicit-path stage, conventional commit locally. It stops before push, merge, `terraform apply`, and deploy unless you asked for that action in the task.
@@ -82,14 +44,7 @@ Coding missions carry the coding checklist, reported by exception: the worker li
 ```sh
 python3 scripts/validate.py
 uvx ruff check .
-uvx pyright .
-uvx --from skills-ref agentskills validate skills/orchestrator-worker-validator
-gh skill publish skills --dry-run
-claude plugin validate .
-curl -fsSL https://raw.githubusercontent.com/anthropics/claude-code/main/plugins/plugin-dev/skills/agent-development/scripts/validate-agent.sh -o /tmp/validate-agent.sh
-bash /tmp/validate-agent.sh agents/orchestrator.md
-bash /tmp/validate-agent.sh agents/worker.md
-bash /tmp/validate-agent.sh agents/validator.md
+uvx ruff format --check .
+uvx ty check
+uvx --from skills-ref agentskills validate skills/harness
 ```
-
-Hosted GitHub Copilot Cloud Agent and Claude Managed Agents runtime tests require their external surfaces and are tracked separately.

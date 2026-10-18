@@ -8,12 +8,19 @@ Concrete patterns for selected checklist items. Look up by slug ID and load this
 # bad
 number_of_widgets = True
 name = "yellow"
-def turn_green(): return "yellow"
+
+
+def turn_green():
+    return "yellow"
+
 
 # good
 has_widgets = True
 favorite_color = "yellow"
-def make_yellow(): return "yellow"
+
+
+def make_yellow():
+    return "yellow"
 ```
 
 ## `core/check-every-return`
@@ -56,6 +63,7 @@ def total(items):
     value = sum(item.price for item in items)
     return max(value, 0)
 
+
 # good: rejects the invalid source state
 def total(items):
     for item in items:
@@ -89,9 +97,11 @@ it("deduplicates users with case-insensitive emails", () => {
 def format_doc(doc):
     return f"{doc.id}: {doc.total:.2f}"
 
+
 # good: keep distinct behavior distinct
 def format_invoice(invoice):
     return f"INV {invoice.id}: {invoice.total:.2f} (net 30)"
+
 
 def format_receipt(receipt):
     return f"RCPT {receipt.id}: paid {receipt.total:.2f}"
@@ -106,6 +116,7 @@ def serve():
     Thread(target=worker, args=(pool,)).start()
     run_until_signal()
     pool.close()
+
 
 # good: cancellation and join order are explicit
 def serve():
@@ -168,13 +179,16 @@ class Order:
     def invoice(self):
         return Invoice(self)
 
+
 class Invoice:
     def __init__(self, order):
         self.order = order
 
+
 # good: Invoice depends on a small capability
 class Priced(Protocol):
     def total(self) -> float: ...
+
 
 class Invoice:
     def __init__(self, source: Priced):

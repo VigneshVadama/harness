@@ -1,10 +1,10 @@
 ---
-name: orchestrator-worker-validator
-description: Use for multi-file or multi-repo engineering work (features, refactors, migrations, debugging, code review), or when asked for "harness" or "orchestrator-worker-validator". Runs bounded worker missions gated by an adversarial validator. Not for questions or single-file edits.
+name: harness
+description: Use for multi-file or multi-repo engineering work (features, refactors, migrations, debugging, code review), or when asked for "harness". Runs bounded worker missions gated by an adversarial read-only validator. Not for questions or single-file edits.
 license: MIT
 ---
 
-# Orchestrator Worker Validator
+# Harness
 
 MUST, MUST NOT, SHOULD, MAY are RFC 2119 keywords: capitalize them in every mission and review.
 
@@ -33,9 +33,9 @@ MUST, MUST NOT, SHOULD, MAY are RFC 2119 keywords: capitalize them in every miss
 
 1. Frame objective, constraints, non-goals, acceptance criteria, risks.
 2. Create `missions/<YYYYMMDD-HHMMSS>-<slug>/mission.md`.
-3. Dispatch workers, disjoint write sets.
+3. Dispatch workers with disjoint write sets, each subagent on its roles-table model.
 4. Run deterministic checks.
-5. Dispatch the validator.
+5. Dispatch the validator; it returns its result in its final message.
 6. On reject: repair blockers only, add guards.
 7. Deliver per references/delivery.md. Default ends at a local commit.
 8. Close: report the summary to the user, delete the mission folder.
