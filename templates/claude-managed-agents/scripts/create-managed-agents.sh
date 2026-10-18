@@ -32,7 +32,10 @@ fi
 
 render() {
   local file="$1"
-  envsubst < "$ROOT_DIR/$file"
+  sed -e "s|\$HARNESS_SKILL_ID|$HARNESS_SKILL_ID|g" \
+    -e "s|\$WORKER_AGENT_ID|${WORKER_AGENT_ID:-\$WORKER_AGENT_ID}|g" \
+    -e "s|\$VALIDATOR_AGENT_ID|${VALIDATOR_AGENT_ID:-\$VALIDATOR_AGENT_ID}|g" \
+    "$ROOT_DIR/$file"
 }
 
 run_create() {

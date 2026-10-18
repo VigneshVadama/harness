@@ -10,8 +10,8 @@ Roles are permanent; models are configuration. Each tool pins role models in exa
 |---|---|---|
 | Claude Code | `agents/*.md` frontmatter `model:` | orchestrator `inherit` (session), worker `sonnet`, validator `opus` |
 | Codex | `templates/codex/.codex/agents/*.toml` `model` + `model_reasoning_effort` | set `model` per deployment; worker effort `low`, validator `high`, orchestrator `xhigh` |
-| GitHub Copilot | `github-copilot/agents/*.agent.md` frontmatter `model:` | `GPT-5.4` |
-| Claude Managed Agents | `templates/claude-managed-agents/*.yaml` | per-deployment |
+| GitHub Copilot | `github-copilot/agents/*.agent.md` frontmatter `model:` | unset: Copilot default model |
+| Claude Managed Agents | `templates/claude-managed-agents/*.yaml` `model:` | coordinator `claude-opus-5-5`, worker `claude-sonnet-5-5`, validator `claude-haiku-5-5` |
 
 Pick a cheap competent model for workers and a strong model for validators. When models change, update these files only. MUST NOT encode model names anywhere else.
 

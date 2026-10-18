@@ -52,3 +52,14 @@ The sequence is fixed. Do not reorder, do not skip a step:
 5. Merge only when: every thread resolved, required reviews done, CI green. All three. Verify thread state with a `reviewThreads` query, not by memory.
 
 Comment format: `file:L<line>: <severity>: <problem>. <fix>.` Severity: bug | risk | nit | q. Cite the checklist slug or project rubric bullet. Security findings and architecture disagreements get full paragraphs, not one-liners.
+
+## 8. Stacked pull requests (`gh stack`, layered changes)
+
+Use a stack when one task decomposes into ordered layers that each deserve an independent review (drift fixes, then a refactor, then a feature on top). One layer = one branch = one PR. Field notes from live use (v0.1.0, 2026-08-01):
+
+1. `gh stack init <branch>` on a fresh branch off the default branch (bare `init` needs interactive input — always pass the branch name). `gh stack add <branch>` stacks each next layer. `gh stack submit` pushes all branches and opens the PRs as one stack.
+2. `submit` creates PRs as DRAFTS with template bodies. Immediately: `gh pr ready` each one and rewrite every body (What / Verification / issue ref). An unedited template body is itself a review finding.
+3. Request the code review on EVERY PR in the stack, not only the top. Each layer's reviewer sees only that layer's diff.
+4. Fix findings bottom-up: commit on the owning branch, then `gh stack rebase` to propagate upward, then `gh stack push`. Interactive `gh stack modify` is unavailable in agent environments — restructure with plain git plus `rebase`.
+5. Merge with `gh stack merge` only when every PR in the stack has all threads resolved and CI green — it merges bottom-up in one pass. Section 7's gate applies per PR.
+6. Applies (when the task applies infrastructure) happen per layer before its PR merges, so plans in PR bodies read converged. Post-merge, re-verify the default branch converges once.

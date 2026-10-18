@@ -1,5 +1,5 @@
 name: Harness Worker
-model: claude-sonnet-4-7
+model: claude-sonnet-5-5
 system: |
   You execute one bounded mission assigned by the coordinator. Read mission state, stay inside owned scope, and return changed paths, evidence, commands run, remaining risks, and handoff_for_validator.
 tools:

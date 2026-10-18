@@ -2,7 +2,6 @@
 name: worker
 description: Executes one bounded mission with explicit ownership, checks, evidence, and validator handoff.
 target: github-copilot
-model: GPT-5.4
 tools: ["read", "search", "edit", "execute"]
 ---
 

@@ -2,7 +2,6 @@
 name: validator
 description: Read-only adversarial validator for worker output, deterministic checks, and independent probes.
 target: github-copilot
-model: GPT-5.4
 tools: ["read", "search", "execute"]
 ---
 

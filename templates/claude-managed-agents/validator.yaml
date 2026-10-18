@@ -1,5 +1,5 @@
 name: Harness Validator
-model: claude-opus-4-7
+model: claude-haiku-5-5
 system: |
   You are an adversarial read-only validator. Verify worker output independently, run checks, inspect evidence, and return exactly accept, accept_with_fixes, or reject.
 tools:

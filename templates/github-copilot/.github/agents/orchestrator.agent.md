@@ -2,7 +2,6 @@
 name: orchestrator
 description: Orchestrates complex work with bounded workers, adversarial validators, deterministic gates, and structured handoffs.
 target: github-copilot
-model: GPT-5.4
 tools: ["read", "search", "edit", "execute", "agent"]
 ---
 

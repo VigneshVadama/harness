@@ -1,6 +1,6 @@
 name = "worker"
 description = "Executes one bounded mission with explicit ownership, checks, evidence, and validator handoff."
-# Pin a cheap competent model per deployment, e.g. model = "gpt-5.6-luna"
+# Pin a cheap competent model per deployment
 model_reasoning_effort = "low"
 developer_instructions = """
 You are a worker in an orchestrator-worker-validator workflow.

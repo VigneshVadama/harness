@@ -155,8 +155,6 @@ def validate_github_agents() -> None:
         fields, body = parse_frontmatter(ROOT / "github-copilot" / "agents" / filename)
         if fields.get("target") != "github-copilot":
             fail(f"github-copilot/agents/{filename} must target github-copilot")
-        if fields.get("model") != "GPT-5.4":
-            fail(f"github-copilot/agents/{filename} must use GPT-5.4")
         if tool_hint not in fields.get("tools", ""):
             fail(f"github-copilot/agents/{filename} missing expected tool")
         if filename == "validator.agent.md" and "edit" in fields.get("tools", "").lower():
