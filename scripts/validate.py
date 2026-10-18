@@ -5,10 +5,9 @@ import json
 import stat
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 from typing import NoReturn
-
-import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "orchestrator-worker-validator"
@@ -85,7 +84,9 @@ def compare_dirs(left: Path, right: Path) -> None:
         capture_output=True,
     )
     if result.returncode != 0:
-        fail(f"mirror drift between {left.relative_to(ROOT)} and {right.relative_to(ROOT)}")
+        fail(
+            f"mirror drift between {left.relative_to(ROOT)} and {right.relative_to(ROOT)}"
+        )
 
 
 def validate_json(path: Path) -> dict[str, object]:
@@ -108,7 +109,10 @@ def validate_plugins() -> None:
     if claude.get("name") != "harness":
         fail(".claude-plugin/plugin.json name mismatch")
     claude_skills = claude.get("skills")
-    if not isinstance(claude_skills, list) or "./skills/orchestrator-worker-validator/" not in claude_skills:
+    if (
+        not isinstance(claude_skills, list)
+        or "./skills/orchestrator-worker-validator/" not in claude_skills
+    ):
         fail(".claude-plugin/plugin.json must expose the harness skill")
     claude_agents = claude.get("agents")
     if not isinstance(claude_agents, list):
@@ -157,10 +161,15 @@ def validate_github_agents() -> None:
             fail(f"github-copilot/agents/{filename} must target github-copilot")
         if tool_hint not in fields.get("tools", ""):
             fail(f"github-copilot/agents/{filename} missing expected tool")
-        if filename == "validator.agent.md" and "edit" in fields.get("tools", "").lower():
+        if (
+            filename == "validator.agent.md"
+            and "edit" in fields.get("tools", "").lower()
+        ):
             fail("GitHub validator must not have edit tools")
         if "handoffs" in fields:
-            fail("GitHub Copilot cloud agents must not use unsupported handoffs frontmatter")
+            fail(
+                "GitHub Copilot cloud agents must not use unsupported handoffs frontmatter"
+            )
         if "orchestrator-worker-validator" not in body:
             fail(f"github-copilot/agents/{filename} must mention the skill")
 
@@ -184,7 +193,9 @@ def validate_codex_templates() -> None:
             for item in skill_configs
         ):
             fail(f"{path.relative_to(ROOT)} must enable {expected_skill_path}")
-    validator = tomllib.loads(read(ROOT / "templates" / "codex" / ".codex" / "agents" / "validator.toml"))
+    validator = tomllib.loads(
+        read(ROOT / "templates" / "codex" / ".codex" / "agents" / "validator.toml")
+    )
     if validator.get("sandbox_mode") != "read-only":
         fail("Codex validator template must be read-only")
 
@@ -192,16 +203,39 @@ def validate_codex_templates() -> None:
 def validate_managed_agent_templates() -> None:
     worker = read(ROOT / "templates" / "claude-managed-agents" / "worker.yaml")
     validator = read(ROOT / "templates" / "claude-managed-agents" / "validator.yaml")
-    coordinator = read(ROOT / "templates" / "claude-managed-agents" / "coordinator.yaml")
-    for name, content in {"worker": worker, "validator": validator, "coordinator": coordinator}.items():
-        for text in ["skills:", "type: custom", "skill_id: $HARNESS_SKILL_ID", "version: latest"]:
+    coordinator = read(
+        ROOT / "templates" / "claude-managed-agents" / "coordinator.yaml"
+    )
+    for name, content in {
+        "worker": worker,
+        "validator": validator,
+        "coordinator": coordinator,
+    }.items():
+        for text in [
+            "skills:",
+            "type: custom",
+            "skill_id: $HARNESS_SKILL_ID",
+            "version: latest",
+        ]:
             if text not in content:
                 fail(f"{name}.yaml missing {text}")
-    for text in ["agent_toolset_20260401", "multiagent:", "type: coordinator", "$WORKER_AGENT_ID", "$VALIDATOR_AGENT_ID"]:
+    for text in [
+        "agent_toolset_20260401",
+        "multiagent:",
+        "type: coordinator",
+        "$WORKER_AGENT_ID",
+        "$VALIDATOR_AGENT_ID",
+    ]:
         if text not in coordinator:
             fail(f"coordinator.yaml missing {text}")
 
-    script = ROOT / "templates" / "claude-managed-agents" / "scripts" / "create-managed-agents.sh"
+    script = (
+        ROOT
+        / "templates"
+        / "claude-managed-agents"
+        / "scripts"
+        / "create-managed-agents.sh"
+    )
     require_file(script)
     mode = script.stat().st_mode
     if not mode & stat.S_IXUSR:
@@ -217,7 +251,9 @@ def validate_managed_agent_templates() -> None:
         capture_output=True,
     )
     if result.returncode != 0:
-        fail("create-managed-agents.sh --dry-run must not require environment variables")
+        fail(
+            "create-managed-agents.sh --dry-run must not require environment variables"
+        )
     for text in ["$HARNESS_SKILL_ID", "$WORKER_AGENT_ID", "$VALIDATOR_AGENT_ID"]:
         if text not in result.stdout:
             fail(f"create-managed-agents.sh --dry-run must preserve {text}")
@@ -232,25 +268,56 @@ def validate_mirrors() -> None:
         compare_dirs(SKILL, mirror)
 
     agent_pairs = [
-        (ROOT / "agents" / "orchestrator.md", ROOT / "templates" / "claude-code" / ".claude" / "agents" / "orchestrator.md"),
-        (ROOT / "agents" / "worker.md", ROOT / "templates" / "claude-code" / ".claude" / "agents" / "worker.md"),
-        (ROOT / "agents" / "validator.md", ROOT / "templates" / "claude-code" / ".claude" / "agents" / "validator.md"),
+        (
+            ROOT / "agents" / "orchestrator.md",
+            ROOT
+            / "templates"
+            / "claude-code"
+            / ".claude"
+            / "agents"
+            / "orchestrator.md",
+        ),
+        (
+            ROOT / "agents" / "worker.md",
+            ROOT / "templates" / "claude-code" / ".claude" / "agents" / "worker.md",
+        ),
+        (
+            ROOT / "agents" / "validator.md",
+            ROOT / "templates" / "claude-code" / ".claude" / "agents" / "validator.md",
+        ),
         (
             ROOT / "github-copilot" / "agents" / "orchestrator.agent.md",
-            ROOT / "templates" / "github-copilot" / ".github" / "agents" / "orchestrator.agent.md",
+            ROOT
+            / "templates"
+            / "github-copilot"
+            / ".github"
+            / "agents"
+            / "orchestrator.agent.md",
         ),
         (
             ROOT / "github-copilot" / "agents" / "worker.agent.md",
-            ROOT / "templates" / "github-copilot" / ".github" / "agents" / "worker.agent.md",
+            ROOT
+            / "templates"
+            / "github-copilot"
+            / ".github"
+            / "agents"
+            / "worker.agent.md",
         ),
         (
             ROOT / "github-copilot" / "agents" / "validator.agent.md",
-            ROOT / "templates" / "github-copilot" / ".github" / "agents" / "validator.agent.md",
+            ROOT
+            / "templates"
+            / "github-copilot"
+            / ".github"
+            / "agents"
+            / "validator.agent.md",
         ),
     ]
     for left, right in agent_pairs:
         if read(left) != read(right):
-            fail(f"mirror drift between {left.relative_to(ROOT)} and {right.relative_to(ROOT)}")
+            fail(
+                f"mirror drift between {left.relative_to(ROOT)} and {right.relative_to(ROOT)}"
+            )
 
 
 def validate_docs() -> None:
